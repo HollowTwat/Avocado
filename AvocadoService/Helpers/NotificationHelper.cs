@@ -3,11 +3,9 @@ using System.Net.Http;
 using System.Text;
 using System;
 using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using AvocadoService.DbModels;
+using AvocadoDb.DbModels;
 
 namespace AvocadoService.Helpers
 {

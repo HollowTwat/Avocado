@@ -21,6 +21,7 @@
 	  <None Remove="WebHostTemplateVer2.zip" />
 	</ItemGroup>
 	<ItemGroup>
+	  <PackageReference Include="HtmlAgilityPack" Version="1.11.71" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.35" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.35" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.35">
@@ -96,6 +97,6 @@
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="DbModels\" />
+	  <ProjectReference Include="..\AvocadoParser\AvocadoParser.csproj" />
 	</ItemGroup>
 </Project>

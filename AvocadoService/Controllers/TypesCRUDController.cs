@@ -1,7 +1,9 @@
-﻿using AvocadoService.DbModels;
+﻿using AvocadoDb.DbModels;
+using AvocadoParser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AvocadoService.Controllers
 {
@@ -18,10 +20,14 @@ namespace AvocadoService.Controllers
             _logger = logger;
         }
         [HttpGet]
-        public string Test()
+        public async Task<string> ParseSite()
         {
-            var res = _context.Products.Where(x => x.Name == "Test");
-            return Newtonsoft.Json.JsonConvert.SerializeObject(res);
+            ParserHelper parserHelper = new ParserHelper();
+            var products = await parserHelper.ParceSite();
+            var productsDisc = products.Distinct().ToList();
+            await _context.Products.AddRangeAsync(productsDisc);
+            await _context.SaveChangesAsync();
+            return $"count={products.Count}, distinct={productsDisc.Count}";
         }
     }
 }

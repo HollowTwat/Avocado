@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvocadoService", "AvocadoSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvocadoTest", "AvocadoTest\AvocadoTest.csproj", "{07BEC9EA-01B3-4FB8-9C3E-5F8C28992FB7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvocadoParser", "AvocadoParser\AvocadoParser.csproj", "{B796F718-31FA-4EAB-AB9D-8EB6C50179C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvocadoDb", "AvocadoDb\AvocadoDb.csproj", "{87F9D3FD-2F06-4B04-BC85-EA6C4BC20ED6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{07BEC9EA-01B3-4FB8-9C3E-5F8C28992FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07BEC9EA-01B3-4FB8-9C3E-5F8C28992FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07BEC9EA-01B3-4FB8-9C3E-5F8C28992FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B796F718-31FA-4EAB-AB9D-8EB6C50179C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B796F718-31FA-4EAB-AB9D-8EB6C50179C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B796F718-31FA-4EAB-AB9D-8EB6C50179C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B796F718-31FA-4EAB-AB9D-8EB6C50179C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F9D3FD-2F06-4B04-BC85-EA6C4BC20ED6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F9D3FD-2F06-4B04-BC85-EA6C4BC20ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F9D3FD-2F06-4B04-BC85-EA6C4BC20ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F9D3FD-2F06-4B04-BC85-EA6C4BC20ED6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

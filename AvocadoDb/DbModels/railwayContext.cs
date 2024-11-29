@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AvocadoService.DbModels
+namespace AvocadoDb.DbModels
 {
     public partial class railwayContext : DbContext
     {
@@ -16,17 +16,14 @@ namespace AvocadoService.DbModels
         {
         }
 
-        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Product> Products { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if DEBUG
-                optionsBuilder.UseNpgsql("Host=roundhouse.proxy.rlwy;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
-#else
-                        optionsBuilder.UseNpgsql("Host=postgres.railway.internal;Port=5432;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseNpgsql("Host=roundhouse.proxy.rlwy.net;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
             }
         }
 
@@ -37,12 +34,14 @@ namespace AvocadoService.DbModels
                 entity.ToTable("product");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('product_id_auto_inc'::regclass)");
 
-                entity.Property(e => e.Brend)
+                entity.Property(e => e.Brand)
                     .HasMaxLength(255)
-                    .HasColumnName("brend");
+                    .HasColumnName("brand");
+
+                entity.Property(e => e.Brandinfo).HasColumnName("brandinfo");
 
                 entity.Property(e => e.Consist).HasColumnName("consist");
 
@@ -52,17 +51,30 @@ namespace AvocadoService.DbModels
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
+                entity.Property(e => e.Howtouse).HasColumnName("howtouse");
+
                 entity.Property(e => e.Name)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .HasColumnName("name");
+
+                entity.Property(e => e.Price)
+                    .HasPrecision(10, 2)
+                    .HasColumnName("price");
 
                 entity.Property(e => e.Type)
                     .HasMaxLength(255)
                     .HasColumnName("type");
 
-                entity.Property(e => e.Weight).HasColumnName("weight");
+                entity.Property(e => e.Url)
+                    .HasMaxLength(255)
+                    .HasColumnName("url");
+
+                entity.Property(e => e.Weight)
+                    .HasPrecision(10, 3)
+                    .HasColumnName("weight");
             });
+
+            modelBuilder.HasSequence("product_id_auto_inc");
 
             OnModelCreatingPartial(modelBuilder);
         }

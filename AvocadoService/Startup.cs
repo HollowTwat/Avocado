@@ -1,4 +1,4 @@
-﻿using AvocadoService.DbModels;
+﻿using AvocadoDb.DbModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
