@@ -2,11 +2,13 @@ using AvocadoDb.DbModels;
 using AvocadoParser;
 using AvocadoService.Helpers;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Telegram.Bot.Types;
 
 namespace NutriDbTest
 {
@@ -64,14 +66,29 @@ namespace NutriDbTest
         [Fact]
         public async Task HelperTest()
         {
-            ParserHelper parserHelper = new ParserHelper();
-            await parserHelper.ParceSite();
+            //ParserHelper parserHelper = new ParserHelper();
+            //var productsUrls = await parserHelper.GetProductUrlsList(200, "SkinCare_Body");
+            //var productsUrlsDis = productsUrls.Distinct().ToList();
+            //var ciclec = productsUrlsDis.Count() / 100;
+            //for (var i = 0; i <= ciclec; i++)
+            //{
+            //    Console.WriteLine($"i={i}");
+            //    List<string> urls;
+            //    if (i != ciclec)
+            //        urls = productsUrlsDis.GetRange(i * 100, 100);
+            //    else
+            //        urls = productsUrlsDis.GetRange(i * 100, productsUrlsDis.Count() - ciclec * 100);
+            //    var products = await parserHelper.ParceElements(urls);
+            //    var productsDisc = products.Distinct().ToList();
+            //    await _mockContext.Products.AddRangeAsync(productsDisc);
+            //    await _mockContext.SaveChangesAsync();
+            //}
             Xunit.Assert.True(true);
         }
         [Fact]
         public async Task ParceFileTest()
         {
-            var text = await File.ReadAllTextAsync("");
+            var text = await System.IO.File.ReadAllTextAsync("");
             var res=Newtonsoft.Json.JsonConvert.DeserializeObject<List<Product>>(text);
         }
         [Fact]
