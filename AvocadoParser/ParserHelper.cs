@@ -7,20 +7,20 @@ namespace AvocadoParser
 {
     public class ParserHelper
     {
-        public async Task<List<Product>> ParceSite()
+        public async Task<List<Product>> ParceElements(List<string> productsUrls)
         {
             var res = new List<Product>();
-            var productsUrls = await GetProductUrlsList();
-            var productsUrlsDis = productsUrls.Distinct().ToList();
-            foreach (var productsUrl in productsUrlsDis)
+  
+            foreach (var productsUrl in productsUrls)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(50);
                 res.Add(await ParseElement(productsUrl));
             }
             //var b = Newtonsoft.Json.JsonConvert.SerializeObject(res);
             return res;
 
         }
+      
         private async Task<string> GetPage(string siteUrl)
         {
             using (HttpClient httpClient = new HttpClient())
@@ -33,13 +33,13 @@ namespace AvocadoParser
                 return html;
             }
         }
-        private async Task<List<string>> GetProductUrlsList()
+        public async Task<List<string>> GetProductUrlsList(int multi, string Cat)
         {
             var res = new List<string>();
-            for (int i = 1; i < 80; i++)
+            for (int i = 1; i < multi; i++)
             {
-                var siteUrl = $"https://api.rivegauche.ru/rg/v1/newRG/products/search?fields=FULL&currentPage={i}&pageSize=24&categoryCode=Cosmeceuticals";
-                Thread.Sleep(500);
+                var siteUrl = $"https://api.rivegauche.ru/rg/v1/newRG/products/search?fields=FULL&currentPage={i}&pageSize=24&categoryCode={Cat}";
+                Thread.Sleep(100);
                 var html = await GetPage(siteUrl);
                 //HtmlDocument htmlSnippet = new HtmlDocument();
                 //htmlSnippet.LoadHtml(html);

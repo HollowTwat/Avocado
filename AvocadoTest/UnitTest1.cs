@@ -68,7 +68,12 @@ namespace NutriDbTest
             await parserHelper.ParceSite();
             Xunit.Assert.True(true);
         }
-
+        [Fact]
+        public async Task ParceFileTest()
+        {
+            var text = await File.ReadAllTextAsync("");
+            var res=Newtonsoft.Json.JsonConvert.DeserializeObject<List<Product>>(text);
+        }
         [Fact]
         public async Task ElementParsceTest()
         {
