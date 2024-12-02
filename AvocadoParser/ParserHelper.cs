@@ -1,16 +1,17 @@
-﻿using AvocadoDb.DbModels;
+﻿using AvocadoServiceDb.DbModels;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Newtonsoft.Json.Linq;
 
-namespace AvocadoParser
+namespace AvocadoServiceParser
 {
     public class ParserHelper
     {
+        private string _source { get; set; } = "RIVE";
         public async Task<List<Product>> ParceElements(List<string> productsUrls)
         {
             var res = new List<Product>();
-  
+
             foreach (var productsUrl in productsUrls)
             {
                 Thread.Sleep(50);
@@ -20,7 +21,7 @@ namespace AvocadoParser
             return res;
 
         }
-      
+
         private async Task<string> GetPage(string siteUrl)
         {
             using (HttpClient httpClient = new HttpClient())
@@ -33,10 +34,10 @@ namespace AvocadoParser
                 return html;
             }
         }
-        public async Task<List<string>> GetProductUrlsList(int multi, string Cat)
+        public async Task<List<string>> GetProductUrlsList(int listFrom, int listTo, string Cat)
         {
             var res = new List<string>();
-            for (int i = 1; i < multi; i++)
+            for (int i = listFrom; i < listTo; i++)
             {
                 var siteUrl = $"https://api.rivegauche.ru/rg/v1/newRG/products/search?fields=FULL&currentPage={i}&pageSize=24&categoryCode={Cat}";
                 Thread.Sleep(100);
@@ -86,6 +87,7 @@ namespace AvocadoParser
                         var brand = k["brand"]?["name"];
                         var brandInfo = k["brand"]?["seoBrandDescription"];
                         var description = k["description"];
+                        var howToUse = k["application"];
                         var featurePairs = features?
          .GroupBy(obj => (string)obj["name"])
          .ToDictionary(
@@ -105,12 +107,14 @@ namespace AvocadoParser
                                 Price = price == null ? null : decimal.Parse(price?["value"].Value<string>()),
                                 Brandinfo = brandInfo?.Value<string>(),
                                 Country = featurePairs?.ContainsKey("Производство") == true ? featurePairs?["Производство"] : null,
-                                Weight = featurePairs?.ContainsKey("Объем, мл") == true ? (int.TryParse(featurePairs?["Объем, мл"], out var w) == true ? w : null) : null,
+                                Volume = featurePairs?.ContainsKey("Объем, мл") == true ? int.TryParse(featurePairs?["Объем, мл"], out var w) == true ? w : null : null,
                                 Type = featurePairs?.ContainsKey("Продукт") == true ? featurePairs["Продукт"] : null,
                                 Consist = ingredients?.Value<string>(),
                                 //HTML = html,
                                 Description = description?.Value<string>(),
                                 Url = url,
+                                Howtouse = howToUse?.Value<string>(),
+                                Source = _source
                             };
                             return productElement;
                         }

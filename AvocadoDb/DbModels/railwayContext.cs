@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AvocadoDb.DbModels
+namespace AvocadoServiceDb.DbModels
 {
     public partial class railwayContext : DbContext
     {
@@ -23,7 +23,7 @@ namespace AvocadoDb.DbModels
             if (!optionsBuilder.IsConfigured)
             {
 #if DEBUG
-                optionsBuilder.UseNpgsql("Host=roundhouse.proxy.rlwy;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
+                optionsBuilder.UseNpgsql("Host=roundhouse.proxy.rlwy.net;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
 #else
                         optionsBuilder.UseNpgsql("Host=postgres.railway.internal;Port=5432;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
 #endif
@@ -64,6 +64,10 @@ namespace AvocadoDb.DbModels
                     .HasPrecision(10, 2)
                     .HasColumnName("price");
 
+                entity.Property(e => e.Source)
+                    .HasMaxLength(255)
+                    .HasColumnName("source");
+
                 entity.Property(e => e.Type)
                     .HasMaxLength(255)
                     .HasColumnName("type");
@@ -71,6 +75,10 @@ namespace AvocadoDb.DbModels
                 entity.Property(e => e.Url)
                     .HasMaxLength(255)
                     .HasColumnName("url");
+
+                entity.Property(e => e.Volume)
+                    .HasPrecision(10, 3)
+                    .HasColumnName("volume");
 
                 entity.Property(e => e.Weight)
                     .HasPrecision(10, 3)

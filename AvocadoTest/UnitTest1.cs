@@ -1,16 +1,14 @@
-using AvocadoDb.DbModels;
-using AvocadoParser;
 using AvocadoService.Helpers;
+using AvocadoServiceDb.DbModels;
+using AvocadoServiceParser;
 using HtmlAgilityPack;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Telegram.Bot.Types;
 
-namespace NutriDbTest
+namespace AvocadoTest
 {
     [TestFixture]
     public class UnitTest1
@@ -88,8 +86,13 @@ namespace NutriDbTest
         [Fact]
         public async Task ParceFileTest()
         {
-            var text = await System.IO.File.ReadAllTextAsync("");
-            var res=Newtonsoft.Json.JsonConvert.DeserializeObject<List<Product>>(text);
+            try
+            {
+                var text = await System.IO.File.ReadAllTextAsync(@"C:\\ReposMy\output.json");
+                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Product>>(text);
+
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
         }
         [Fact]
         public async Task ElementParsceTest()
@@ -141,9 +144,9 @@ namespace NutriDbTest
                                 Brand = brand?.Value<string>(),
                                 Price = price == null ? null : decimal.Parse(price?["value"].Value<string>()),
                                 BrandInfo = brandInfo?.Value<string>(),
-                                Country = featurePairs?.ContainsKey("Производство") == true ? featurePairs?["Производство"]: null,
-                                Weight = featurePairs?.ContainsKey("Объем, мл") == true ? int.Parse(featurePairs?["Объем, мл"]):null,
-                                 Type = featurePairs?.ContainsKey("Продукт") == true ? featurePairs["Продукт"]:null,
+                                Country = featurePairs?.ContainsKey("Производство") == true ? featurePairs?["Производство"] : null,
+                                Weight = featurePairs?.ContainsKey("Объем, мл") == true ? int.Parse(featurePairs?["Объем, мл"]) : null,
+                                Type = featurePairs?.ContainsKey("Продукт") == true ? featurePairs["Продукт"] : null,
                                 Consist = ingredients?.Value<string>(),
                                 //HTML = html,
                                 URL = url

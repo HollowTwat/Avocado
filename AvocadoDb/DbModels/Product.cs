@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AvocadoDb.DbModels
+namespace AvocadoServiceDb.DbModels
 {
     public partial class Product
     {
@@ -17,5 +17,7 @@ namespace AvocadoDb.DbModels
         public string? Brandinfo { get; set; }
         public string? Url { get; set; }
         public string? Howtouse { get; set; }
+        public decimal? Volume { get; set; }
+        public string? Source { get; set; }
     }
 }

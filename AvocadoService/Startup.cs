@@ -1,4 +1,5 @@
-﻿using AvocadoDb.DbModels;
+﻿using AvocadoServiceDb.DbModels;
+using AvocadoServiceParser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +9,7 @@ namespace AvocadoService
     public class Startup
     {
         //#if DEBUG
-        //        optionsBuilder.UseNpgsql("Host=roundhouse.proxy.rlwy;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
+        //        optionsBuilder.UseNpgsql("Host=roundhouse.proxy.rlwy.net;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
         //#else
         //        optionsBuilder.UseNpgsql("Host=postgres.railway.internal;Port=5432;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
         //#endif 
@@ -30,6 +31,7 @@ namespace AvocadoService
 
             services.AddSwaggerGen();
             services.AddDbContext<railwayContext>();
+            services.AddTransient<ParserHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

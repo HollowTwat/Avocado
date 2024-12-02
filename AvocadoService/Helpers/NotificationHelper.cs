@@ -5,7 +5,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using AvocadoDb.DbModels;
+using AvocadoServiceDb.DbModels;
 
 namespace AvocadoService.Helpers
 {
