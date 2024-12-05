@@ -1,5 +1,5 @@
-﻿using AvocadoServiceDb.DbModels;
-using AvocadoServiceParser;
+﻿using AvocadoService.AvocadoServiceDb.DbModels;
+using AvocadoService.AvocadoServiceParser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

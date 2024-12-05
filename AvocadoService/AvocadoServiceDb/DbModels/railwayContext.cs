@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AvocadoServiceDb.DbModels
+namespace AvocadoService.AvocadoServiceDb.DbModels
 {
     public partial class railwayContext : DbContext
     {

@@ -1,6 +1,6 @@
+using AvocadoService.AvocadoServiceDb.DbModels;
 using AvocadoService.Helpers;
-using AvocadoServiceDb.DbModels;
-using AvocadoServiceParser;
+using AvocadoService.AvocadoServiceParser;
 using HtmlAgilityPack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

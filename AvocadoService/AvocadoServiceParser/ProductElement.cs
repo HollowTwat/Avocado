@@ -1,4 +1,4 @@
-﻿namespace AvocadoServiceParser
+﻿namespace AvocadoService.AvocadoServiceParser
 {
     public class ProductElement
     {
