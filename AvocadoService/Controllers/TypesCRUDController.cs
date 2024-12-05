@@ -81,7 +81,7 @@ namespace AvocadoService.Controllers
         {
             try
             {
-               //         var newList = _context.Products.Select(o => new
+                //         var newList = _context.Products.Select(o => new
                 //         {
                 //             Identifier = o.Id,
                 //             FullName = o.Name
@@ -119,5 +119,25 @@ namespace AvocadoService.Controllers
                 return null;
             }
         }
+
+        [HttpGet]
+        public async Task<bool> SetElementRate(GPTRateSaveRequest req)
+        {
+            try
+            {
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+    }
+    public class GPTRateSaveRequest
+    {
+        public int Id { get; set; }
+        public string GPTRating { get; set; }
     }
 }
