@@ -62,10 +62,12 @@ namespace AvocadoService.Controllers
         {
             try
             {
-                var text = await System.IO.File.ReadAllTextAsync(@"C:\\ReposMy\output.json");
+                var text = await System.IO.File.ReadAllTextAsync(@"C:\\ReposMy\goldapple_uhod.json");
                 var res = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Product>>(text);
                 var resd = res.Distinct().ToList();
-                await _context.Products.AddRangeAsync(resd);
+                var excl = _context.Products.Where(x => resd.Select(x => x.Url).ToList().Contains(x.Url)).Select(x => x.Url).ToList();
+                var resex = resd.Except(res.Where(x => excl.Contains(x.Url))).ToList();
+                await _context.Products.AddRangeAsync(resex);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -79,6 +81,16 @@ namespace AvocadoService.Controllers
         {
             try
             {
+               //         var newList = _context.Products.Select(o => new
+                //         {
+                //             Identifier = o.Id,
+                //             FullName = o.Name
+                //         })
+                //.ToList();
+                //         System.IO.File.WriteAllText(@"C:\\ReposMy\products.json", Newtonsoft.Json.JsonConvert.SerializeObject(newList));
+
+
+
                 var dub = _context.Products.AsEnumerable()
                       .GroupBy(x => x.Url)
                      .Where(g => g.Count() > 1)
@@ -90,6 +102,21 @@ namespace AvocadoService.Controllers
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        [HttpGet]
+        public async Task<string> GetElementInfo(int Id)
+        {
+            try
+            {
+                var elem = _context.Products.SingleOrDefault(x => x.Id == Id);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(elem);
+
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

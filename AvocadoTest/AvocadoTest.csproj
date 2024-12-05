@@ -25,8 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AvocadoDb\AvocadoDb.csproj" />
-    <ProjectReference Include="..\AvocadoParser\AvocadoParser.csproj" />
     <ProjectReference Include="..\AvocadoService\AvocadoService.csproj" />
   </ItemGroup>
 
