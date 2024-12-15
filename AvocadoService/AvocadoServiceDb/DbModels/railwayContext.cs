@@ -16,7 +16,8 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
         {
         }
 
-        public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -57,6 +58,7 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
                 entity.Property(e => e.Howtouse).HasColumnName("howtouse");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(255)
                     .HasColumnName("name");
 
@@ -85,7 +87,56 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
                     .HasColumnName("weight");
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("user");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('user_id_auto_inc'::regclass)");
+
+                entity.Property(e => e.Activity)
+                    .HasMaxLength(255)
+                    .HasColumnName("activity");
+
+                entity.Property(e => e.Age)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("age");
+
+                entity.Property(e => e.Allergy)
+                    .HasMaxLength(255)
+                    .HasColumnName("allergy");
+
+                entity.Property(e => e.Gender)
+                    .HasMaxLength(255)
+                    .HasColumnName("gender");
+
+                entity.Property(e => e.Habits)
+                    .HasMaxLength(255)
+                    .HasColumnName("habits");
+
+                entity.Property(e => e.Lifestyle)
+                    .HasMaxLength(255)
+                    .HasColumnName("lifestyle");
+
+                entity.Property(e => e.Location)
+                    .HasMaxLength(255)
+                    .HasColumnName("location");
+
+                entity.Property(e => e.Stress)
+                    .HasMaxLength(255)
+                    .HasColumnName("stress");
+
+                entity.Property(e => e.UserTgId).HasColumnName("userTgId");
+
+                entity.Property(e => e.WaterIntake)
+                    .HasMaxLength(255)
+                    .HasColumnName("water_intake");
+            });
+
             modelBuilder.HasSequence("product_id_auto_inc");
+
+            modelBuilder.HasSequence("user_id_auto_inc");
 
             OnModelCreatingPartial(modelBuilder);
         }

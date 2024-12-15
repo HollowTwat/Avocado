@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AvocadoService.AvocadoServiceParser
 {
-    public class ParserHelper
+    public class RIVEParserHelper
     {
         private string _source { get; set; } = "RIVE";
         public async Task<List<Product>> ParceElements(List<string> productsUrls)

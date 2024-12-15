@@ -13,7 +13,7 @@ namespace AvocadoService
         //#else
         //        optionsBuilder.UseNpgsql("Host=postgres.railway.internal;Port=5432;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway");
         //#endif 
-        //Scaffold-DbContext "Host=roundhouse.proxy.rlwy.net;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway" Npgsql.EntityFrameworkCore.PostgreSQL -OutputDir DbModels -f
+        //Scaffold-DbContext "Host=roundhouse.proxy.rlwy.net;Port=35316;Username=postgres;Password=IqhHNAjWczuVvNzNbnfdViENrzwdkvyG;Database=railway" Npgsql.EntityFrameworkCore.PostgreSQL -OutputDir AvocadoServiceDb/DbModels -f
         public IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
@@ -31,7 +31,7 @@ namespace AvocadoService
 
             services.AddSwaggerGen();
             services.AddDbContext<railwayContext>();
-            services.AddTransient<ParserHelper>();
+            services.AddTransient<RIVEParserHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
