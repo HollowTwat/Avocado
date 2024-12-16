@@ -180,7 +180,7 @@ namespace AvocadoService.Controllers
                 if (!int.TryParse(req.user_data.age, out int age))
                     age = 0;
                 var users = _context.Users.Where(x => x.UserTgId == user_tg_id);
-                if (!users.Any())
+                if (users.Any())
                 {
 
                     var user = users.Single();
