@@ -345,7 +345,7 @@ namespace AvocadoService.Controllers
         }
 
         [HttpGet]
-        public async Task<bool> ChechUserSub(long userTgId)
+        public async Task<bool> CheckUserSub(long userTgId)
         {
             return _context.Users.SingleOrDefault(x => x.UserTgId == userTgId) != null;
         }
