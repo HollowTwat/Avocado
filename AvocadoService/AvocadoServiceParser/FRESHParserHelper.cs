@@ -52,9 +52,17 @@ namespace AvocadoService.AvocadoServiceParser
                   item => item["value"]?.ToString());
                 foreach (var offer in offers)
                 {
-                    var volume = offer["propertiesValues"].Where(x => x["title"]?.ToString() == "Объем").SingleOrDefault()["value"]?.ToString();
-                    volume= volume.Replace("мл",string.Empty);
-                    volume= volume.Replace("л", "000");
+                    string volume = null;
+                    var volumeToken = offer["propertiesValues"].Where(x => x["title"]?.ToString() == "Объем").ToList().SingleOrDefault();
+                    if (volumeToken != null)
+                    {
+                        volume = volumeToken["value"]?.ToString();
+                        volume = volume.Replace("мл", string.Empty);
+                        volume = volume.Replace("л", "000");
+                    }
+                    var type = element["breadcrumbs"]?[3]?["code"].ToString();
+                    if (string.IsNullOrEmpty(type))
+                        type = "Витамины и БАДы";
                     var productElement = new Product
                     {
                         Name = element["title"]?.Value<string>(),
@@ -63,7 +71,7 @@ namespace AvocadoService.AvocadoServiceParser
                         Brandinfo = string.Empty,
                         Country = propers.ContainsKey("Страна производства") ? propers["Страна производства"] : string.Empty,
                         Volume =  string.IsNullOrEmpty(volume) == false ? int.TryParse(volume, out var w) == true ? w : null : null,
-                        Type = element["breadcrumbs"]?[3]?["code"].ToString(),
+                        Type = type,
                         Consist = propers.ContainsKey("Состав") ? propers["Состав"] : string.Empty,
                         //HTML = html,
                         Description = element["description"]?.ToString(),
@@ -71,6 +79,7 @@ namespace AvocadoService.AvocadoServiceParser
                         Howtouse = propers.ContainsKey("Способ применения") ? propers["Способ применения"] : string.Empty,
                         Source = _source
                     };
+                    productElement.Name += $",{productElement.Brand},{productElement.Volume}";
                     res.Add( productElement);
                 }
                 return res;

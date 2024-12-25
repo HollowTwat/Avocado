@@ -1,12 +1,6 @@
 ﻿namespace AvocadoService.Models
 {
-    public class SetUserDataRequest
-    {
-        public string tg_id { get; set; }
-        public UserData user_data { get; set; }
-
-    }
-    public class UserData
+    public class UserBaseData
     {
         public string age { get; set; }
         public string gender { get; set; }
@@ -18,6 +12,8 @@
         public string water_intake { get; set; }
         public string stress { get; set; }
         public string habits { get; set; }
-        
+        public string ethics { get; set; }
+
+
     }
 }

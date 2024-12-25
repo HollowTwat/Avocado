@@ -107,6 +107,46 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
                     .HasMaxLength(255)
                     .HasColumnName("allergy");
 
+                entity.Property(e => e.Bodyattentionareas)
+                    .HasMaxLength(255)
+                    .HasColumnName("bodyattentionareas");
+
+                entity.Property(e => e.Bodygoals)
+                    .HasMaxLength(255)
+                    .HasColumnName("bodygoals");
+
+                entity.Property(e => e.Bodyhairissues)
+                    .HasMaxLength(255)
+                    .HasColumnName("bodyhairissues");
+
+                entity.Property(e => e.Bodyskincondition)
+                    .HasMaxLength(255)
+                    .HasColumnName("bodyskincondition");
+
+                entity.Property(e => e.Bodyskinsensitivity)
+                    .HasMaxLength(255)
+                    .HasColumnName("bodyskinsensitivity");
+
+                entity.Property(e => e.Bodyskintype)
+                    .HasMaxLength(255)
+                    .HasColumnName("bodyskintype");
+
+                entity.Property(e => e.Faceskincondition)
+                    .HasMaxLength(255)
+                    .HasColumnName("faceskincondition");
+
+                entity.Property(e => e.Faceskingoals)
+                    .HasMaxLength(255)
+                    .HasColumnName("faceskingoals");
+
+                entity.Property(e => e.Faceskinissues)
+                    .HasMaxLength(255)
+                    .HasColumnName("faceskinissues");
+
+                entity.Property(e => e.Faceskintype)
+                    .HasMaxLength(255)
+                    .HasColumnName("faceskintype");
+
                 entity.Property(e => e.Gender)
                     .HasMaxLength(255)
                     .HasColumnName("gender");
@@ -114,6 +154,50 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
                 entity.Property(e => e.Habits)
                     .HasMaxLength(255)
                     .HasColumnName("habits");
+
+                entity.Property(e => e.Haircondition)
+                    .HasMaxLength(255)
+                    .HasColumnName("haircondition");
+
+                entity.Property(e => e.Haircurrentproducts)
+                    .HasMaxLength(255)
+                    .HasColumnName("haircurrentproducts");
+
+                entity.Property(e => e.Hairgoals)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairgoals");
+
+                entity.Property(e => e.Hairlength)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairlength");
+
+                entity.Property(e => e.Hairproducttexture)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairproducttexture");
+
+                entity.Property(e => e.Hairscalptype)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairscalptype");
+
+                entity.Property(e => e.Hairsensitivity)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairsensitivity");
+
+                entity.Property(e => e.Hairstructure)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairstructure");
+
+                entity.Property(e => e.Hairstylingtools)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairstylingtools");
+
+                entity.Property(e => e.Hairthickness)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairthickness");
+
+                entity.Property(e => e.Hairwashingfrequency)
+                    .HasMaxLength(255)
+                    .HasColumnName("hairwashingfrequency");
 
                 entity.Property(e => e.Lifestyle)
                     .HasMaxLength(255)
