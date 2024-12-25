@@ -344,5 +344,11 @@ namespace AvocadoService.Controllers
             return _context.Users.SingleOrDefault(x => x.UserTgId == userTgId);
         }
 
+        [HttpGet]
+        public async Task<bool> ChechUserSub(long userTgId)
+        {
+            return _context.Users.SingleOrDefault(x => x.UserTgId == userTgId) != null;
+        }
+
     }
 }
