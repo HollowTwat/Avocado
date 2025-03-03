@@ -83,6 +83,31 @@ namespace AvocadoService.Controllers
                 return "Fail";
             }
         }
+
+        [HttpGet]
+        public async Task<string> ParseGOLDSite(int listFrom, int listTo)
+        {
+            try
+            {
+                //волосы 
+                var Cat = "a0dac498-5818-4be9-b9d2-dc6e1047f589";
+                GOLDParserHelper parserHelper = new GOLDParserHelper();
+                var products = await parserHelper.GetProductList(listFrom, listTo, Cat);
+
+                var productsDis = products.DistinctBy(x => x.Name).ToList();
+                var existproductsUrls = _context.Products.Where(x => productsDis.Select(x => x.Url).Contains(x.Url)).Select(x => x.Url).ToList();
+                var productsUrlDis = productsDis.Except<Product>(productsDis.Where(x => existproductsUrls.Contains(x.Url))).ToList();
+                await _context.Products.AddRangeAsync(productsUrlDis);
+                await _context.SaveChangesAsync();
+                //}
+
+                return $"OK";
+            }
+            catch (Exception ex)
+            {
+                return "Fail";
+            }
+        }
         [HttpGet]
         public async Task<bool> ParseFile()
         {

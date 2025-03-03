@@ -3,6 +3,7 @@
     public class UserBaseData
     {
         public string age { get; set; }
+        public string name { get; set; }
         public string gender { get; set; }
         public string location { get; set; }
         public string allergy { get; set; }

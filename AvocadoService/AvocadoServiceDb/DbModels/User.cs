@@ -37,5 +37,7 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
         public string Hairproducttexture { get; set; }
         public string Hairsensitivity { get; set; }
         public string Hairstylingtools { get; set; }
+        public bool IsActive { get; set; }
+        public string Email { get; set; }
     }
 }

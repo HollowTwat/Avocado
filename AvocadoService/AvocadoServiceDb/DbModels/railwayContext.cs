@@ -17,6 +17,7 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
         }
 
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -87,6 +88,44 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
                     .HasColumnName("weight");
             });
 
+            modelBuilder.Entity<Subscription>(entity =>
+            {
+                entity.ToTable("subscription");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('sub_id_auto_inc'::regclass)");
+
+                entity.Property(e => e.AccountId).HasMaxLength(255);
+
+                entity.Property(e => e.Amount).HasPrecision(10, 2);
+
+                entity.Property(e => e.DateCreate).HasColumnType("timestamp(6) without time zone");
+
+                entity.Property(e => e.DateTime).HasColumnType("timestamp(6) without time zone");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("timestamp(6) without time zone");
+
+                entity.Property(e => e.Email).HasMaxLength(255);
+
+                entity.Property(e => e.Extra).IsRequired();
+
+                entity.Property(e => e.InvoiceId).HasMaxLength(255);
+
+                entity.Property(e => e.Rrn).HasMaxLength(255);
+
+                entity.Property(e => e.Status).HasMaxLength(255);
+
+                entity.Property(e => e.SubscriptionId).HasMaxLength(255);
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasDefaultValueSql("'unknown'::character varying");
+
+                entity.Property(e => e.UserTgId).HasColumnName("userTgId");
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("user");
@@ -130,6 +169,8 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
                 entity.Property(e => e.Bodyskintype)
                     .HasMaxLength(255)
                     .HasColumnName("bodyskintype");
+
+                entity.Property(e => e.Email).HasMaxLength(255);
 
                 entity.Property(e => e.Faceskincondition)
                     .HasMaxLength(255)
@@ -219,6 +260,8 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
             });
 
             modelBuilder.HasSequence("product_id_auto_inc");
+
+            modelBuilder.HasSequence("sub_id_auto_inc");
 
             modelBuilder.HasSequence("user_id_auto_inc");
 
