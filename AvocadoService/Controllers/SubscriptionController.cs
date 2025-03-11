@@ -55,10 +55,14 @@ namespace AvocadoService.Controllers
         //}
 
         [HttpGet]
-        public async Task<bool> Test()
+        public async Task<string> Test()
         {
-            await ErrorHelper.SendSystemMess("Test");
-            return true;
+            try
+            {
+                await ErrorHelper.SendSystemMess("Test");
+                return "OK";
+            }
+            catch (Exception ex) { return Newtonsoft.Json.JsonConvert.SerializeObject(ex); }
         }
         [HttpPost]
         public async Task<SubResponse> SuccessPay()
