@@ -113,7 +113,7 @@ namespace AvocadoService.Controllers
                     await _context.SaveChangesAsync();
 
                     //}
-                    _subscriptionHelper.SendEmailInfo(cl.Email, planLabel);
+                    //_subscriptionHelper.SendEmailInfo(cl.Email, planLabel);
 
                     //var noti = await _subscriptionHelper.SendPayNoti(inputUserId);
                     //if (!noti)
