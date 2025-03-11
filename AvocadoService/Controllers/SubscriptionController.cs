@@ -53,6 +53,13 @@ namespace AvocadoService.Controllers
         //await    _context.SaveChangesAsync();
         //    return true;
         //}
+
+        [HttpGet]
+        public async Task<bool> Test()
+        {
+            await ErrorHelper.SendSystemMess("Test");
+            return true;
+        }
         [HttpPost]
         public async Task<SubResponse> SuccessPay()
         {
