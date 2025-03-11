@@ -1,5 +1,6 @@
 ﻿using AvocadoService.AvocadoServiceDb.DbModels;
 using AvocadoService.AvocadoServiceParser;
+using AvocadoService.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,7 @@ namespace AvocadoService
 
             services.AddSwaggerGen();
             services.AddDbContext<railwayContext>();
+            services.AddTransient<SubscriptionHelper>();
             services.AddTransient<RIVEParserHelper>();
         }
 
