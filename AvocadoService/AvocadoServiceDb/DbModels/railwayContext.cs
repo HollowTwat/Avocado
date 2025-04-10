@@ -56,6 +56,8 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
+                entity.Property(e => e.Extra).HasColumnName("extra");
+
                 entity.Property(e => e.Howtouse).HasColumnName("howtouse");
 
                 entity.Property(e => e.Name)

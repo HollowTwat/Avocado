@@ -1,4 +1,5 @@
-﻿using AvocadoService.AvocadoServiceDb.DbModels;
+﻿using AngleSharp.Common;
+using AvocadoService.AvocadoServiceDb.DbModels;
 using AvocadoService.AvocadoServiceParser;
 using AvocadoService.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -108,25 +109,7 @@ namespace AvocadoService.Controllers
                 return "Fail";
             }
         }
-        [HttpGet]
-        public async Task<bool> ParseFile()
-        {
-            try
-            {
-                var text = await System.IO.File.ReadAllTextAsync(@"C:\\ReposMy\goldapple_volosy.json");
-                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Product>>(text);
-                var resd = res.Distinct().ToList();
-                var excl = _context.Products.Where(x => resd.Select(x => x.Url).ToList().Contains(x.Url)).Select(x => x.Url).ToList();
-                var resex = resd.Except(res.Where(x => excl.Contains(x.Url))).ToList();
-                await _context.Products.AddRangeAsync(resex);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+        
         [HttpGet]
         public async Task<bool> GetDupl()
         {

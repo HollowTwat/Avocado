@@ -129,6 +129,9 @@ namespace AvocadoService.AvocadoServiceParser
             using (HttpClient httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+                httpClient.DefaultRequestHeaders.Add("X-GIB-GSSCw-goldapple-ru", "VnCX912INWyfXjtR2Wzy+z7Njwd7MSAErCdx8hwBOvNUfIifoYulaVf9fg23FlE6SRR5T4YYftdoz4oDcA1tejpcJhE+HMoR+pVM4qnE68jKfpNbo5Bam+1nKeksT6qmqpq+0thUeYtxWboBmP3u26xXXVNOiIhjCahzepsjGZouJmd+VrDoCZxwrjJ6Sl7nh+rEjPCAcvGrkhYvEP/OsCxHjspFHON02LE1X2tOQgt5CBfl0ZbwiksaRG/bLEEgbmQSHuiOiw==");
+                httpClient.DefaultRequestHeaders.Add("X-GIB-FGSSCw-goldapple-ru", "5WSvecd94f8528654ea6276cb67fb3dae432999d");
+
                 var res = await httpClient.GetAsync(siteUrl);
                 var html = await res.Content.ReadAsStringAsync();
                 //var t = Path.GetTempFileName();
