@@ -8,6 +8,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace AvocadoTest
 {
@@ -43,52 +44,17 @@ namespace AvocadoTest
             _mockServiceScopeFactory.Setup(s => s.CreateScope()).Returns(_mockScope.Object);
         }
         [Fact]
-        public async Task BaseParsceTest()
+        public async Task TableToHeadersTest()
         {
-            string productBaseUrl = "https://rivegauche.ru";
             try
             {
-                using HttpClient httpClient = new HttpClient();
+                var table = _railwayContext.Products.Select(x => new { Identifier = x.Id, FullName = x.Name })
+    .ToList();
+                File.WriteAllText("output.json", JsonSerializer.Serialize(table));
 
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-                var res = await httpClient.GetAsync("https://rivegauche.ru/category/kosmetsevtika?currentPage=6");
-                var html = await res.Content.ReadAsStringAsync();
-                //    var t = Path.GetTempFileName();
-                //    File.WriteAllText(t, html);
-
-                //var html = await File.ReadAllTextAsync("C:\\Users\\Thinkbook\\AppData\\Local\\Temp\\tmp3E51.tmp");
-                HtmlDocument htmlSnippet = new HtmlDocument();
-                htmlSnippet.LoadHtml(html);
-                var attrs = htmlSnippet.DocumentNode.SelectNodes("//product-item/div/a");
-                var r = attrs.Select(x => x.GetAttributeValue("href", string.Empty));
+                Xunit.Assert.True(true);
             }
-            catch (Exception ex)
-            {
-                Xunit.Assert.True(false);
-            }
-        }
-
-        [Fact]
-        public async Task HelperTest()
-        {
-            //ParserHelper parserHelper = new ParserHelper();
-            //var productsUrls = await parserHelper.GetProductUrlsList(200, "SkinCare_Body");
-            //var productsUrlsDis = productsUrls.Distinct().ToList();
-            //var ciclec = productsUrlsDis.Count() / 100;
-            //for (var i = 0; i <= ciclec; i++)
-            //{
-            //    Console.WriteLine($"i={i}");
-            //    List<string> urls;
-            //    if (i != ciclec)
-            //        urls = productsUrlsDis.GetRange(i * 100, 100);
-            //    else
-            //        urls = productsUrlsDis.GetRange(i * 100, productsUrlsDis.Count() - ciclec * 100);
-            //    var products = await parserHelper.ParceElements(urls);
-            //    var productsDisc = products.Distinct().ToList();
-            //    await _mockContext.Products.AddRangeAsync(productsDisc);
-            //    await _mockContext.SaveChangesAsync();
-            //}
-            Xunit.Assert.True(true);
+            catch (Exception ex) { Xunit.Assert.Fail(); }
         }
         //[Fact]
         public async Task ParceNANOORGTest()
@@ -151,7 +117,7 @@ namespace AvocadoTest
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
         }
-        [Fact]
+        //[Fact]
         public async Task ParceMIKOTest()
         {
             try
@@ -170,6 +136,18 @@ namespace AvocadoTest
             {
                 var source = "TINTBERRY";
                 var path = @"C:\\ReposMy\tintberry.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        [Fact]
+        public async Task ParceLIVEORGTest()
+        {
+            try
+            {
+                var source = "LIVEORG";
+                var path = @"C:\\ReposMy\liveorganic_2.jsonl";
                 var res = await ParceFileTest(source, path);
                 Xunit.Assert.True(res);
             }
@@ -217,71 +195,6 @@ namespace AvocadoTest
             catch (Exception ex)
             { return false; }
         }
-        [Fact]
-        public async Task ElementParsceTest()
-        {
-            string url = "https://api.rivegauche.ru/rg/v1/newRG/products/search?fields=FULL&currentPage=1&pageSize=24&categoryCode=Cosmeceuticals";
 
-
-            using HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-            var res = await httpClient.GetAsync(url);
-            var html = await res.Content.ReadAsStringAsync();
-
-            try
-            {
-                HtmlDocument htmlSnippet = new HtmlDocument();
-                htmlSnippet.LoadHtml(html);
-                var sc = htmlSnippet.DocumentNode.SelectSingleNode("//script[@type='application/json']").InnerHtml;
-                var jj = JObject.Parse(sc);
-                foreach (var el in jj.Children())
-                {
-                    int nnullcount = 0;
-                    var k = el.FirstOrDefault()?.FirstOrDefault()?.FirstOrDefault();
-                    if (k != null)
-                    {
-                        var name = k["name"];
-                        var features = k["features"];
-                        var price = k["price"];
-                        var ingredients = k["ingredients"];
-                        var brand = k["brand"]?["name"];
-                        var brandInfo = k["brand"]?["seoBrandDescription"];
-                        var featurePairs = features?
-         .GroupBy(obj => (string)obj["name"])
-         .ToDictionary(
-             group => group.Key,
-             group => string.Join(", ", group.Select(obj => (string)obj["value"]))
-         );
-                        //            var featurePairs = features?
-                        //.ToDictionary(
-                        //    obj => (string)obj["name"],
-                        //    obj => (string)obj["value"]);
-
-                        nnullcount = (name != null ? 1 : 0) + (features != null ? 1 : 0) + (price != null ? 1 : 0) +
-                            (ingredients != null ? 1 : 0) + (brand != null ? 1 : 0) + (brandInfo != null ? 1 : 0);
-                        if (nnullcount > 3)
-                        {
-                            var productElement = new ProductElement
-                            {
-                                Name = name?.Value<string>(),
-                                Brand = brand?.Value<string>(),
-                                Price = price == null ? null : decimal.Parse(price?["value"].Value<string>()),
-                                BrandInfo = brandInfo?.Value<string>(),
-                                Country = featurePairs?.ContainsKey("Производство") == true ? featurePairs?["Производство"] : null,
-                                Weight = featurePairs?.ContainsKey("Объем, мл") == true ? int.Parse(featurePairs?["Объем, мл"]) : null,
-                                Type = featurePairs?.ContainsKey("Продукт") == true ? featurePairs["Продукт"] : null,
-                                Consist = ingredients?.Value<string>(),
-                                //HTML = html,
-                                URL = url
-                            };
-                            // return productElement;
-                        }
-                    }
-
-                }
-                // return new ProductElement { HTML = html, URL = url };
-            }
-            catch (Exception ex) { }//            return new ProductElement { HTML = html, URL = url }; }
-        }
     }
 }

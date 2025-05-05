@@ -24,6 +24,7 @@ namespace AvocadoService.Controllers
             _context = context;
             _logger = logger;
         }
+        [Obsolete]
         [HttpGet]
         public async Task<string> ParseRIVEPSite(int listFrom, int listTo, string Cat)
         {
@@ -59,7 +60,7 @@ namespace AvocadoService.Controllers
                 return "Fail";
             }
         }
-
+        [Obsolete]
         [HttpGet]
         public async Task<string> ParseFRESHSite(int listFrom, int listTo)
         {
@@ -84,7 +85,7 @@ namespace AvocadoService.Controllers
                 return "Fail";
             }
         }
-
+        [Obsolete]
         [HttpGet]
         public async Task<string> ParseGOLDSite(int listFrom, int listTo)
         {
