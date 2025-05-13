@@ -141,13 +141,111 @@ namespace AvocadoTest
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
         }
-        [Fact]
+        //[Fact]
         public async Task ParceLIVEORGTest()
         {
             try
             {
                 var source = "LIVEORG";
-                var path = @"C:\\ReposMy\liveorganic_2.jsonl";
+                var path = @"C:\\ReposMy\productz.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+
+        //[Fact]
+        public async Task ParceECOMAKETest()
+        {
+            try
+            {
+                var source = "ECOMAKE";
+                var path = @"C:\\ReposMy\ecomake.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceMAOKATest()
+        {
+            try
+            {
+                var source = "MAOKA";
+                var path = @"C:\\ReposMy\maoka.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceMOREDOMATest()
+        {
+            try
+            {
+                var source = "MOREDOMA";
+                var path = @"C:\\ReposMy\more_doma.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+
+        //[Fact]
+        public async Task ParceBIODEPOTest()
+        {
+            try
+            {
+                var source = "BIODEPO";
+                var path = @"C:\\ReposMy\biodepo.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceYODOMETICSTest()
+        {
+            try
+            {
+                var source = "YODOMETICS";
+                var path = @"C:\\ReposMy\yodometics.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceSIBIRBOTANICTest()
+        {
+            try
+            {
+                var source = "SIBIRBOTANICT";
+                var path = @"C:\\ReposMy\sibirbotaniq.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceFEELNATURETest()
+        {
+            try
+            {
+                var source = "FEELNATURE";
+                var path = @"C:\\ReposMy\feelnature.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }   
+        //[Fact]
+        public async Task ParceVIMTest()
+        {
+            try
+            {
+                var source = "VIM";
+                var path = @"C:\\ReposMy\vim.jsonl";
                 var res = await ParceFileTest(source, path);
                 Xunit.Assert.True(res);
             }

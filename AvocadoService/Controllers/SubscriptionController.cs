@@ -102,22 +102,10 @@ namespace AvocadoService.Controllers
                         DateUpdate = DateTime.UtcNow.ToLocalTime().AddHours(3),
                         Extra = Newtonsoft.Json.JsonConvert.SerializeObject(cl)
                     });
-                    //var user = await _context.Users.SingleOrDefaultAsync(x => x.TgId == inputUserId);
-                    //if (user != null)
-                    //{
-                    //    user.IsActive = true;
-                    //    _context.Users.Update(user);
-                    //}
-                    //else
-                    //{
+
                     await _context.SaveChangesAsync();
+                    _subscriptionHelper.SendEmailInfo(cl.Email, planLabel);
 
-                    //}
-                    //_subscriptionHelper.SendEmailInfo(cl.Email, planLabel);
-
-                    //var noti = await _subscriptionHelper.SendPayNoti(inputUserId);
-                    //if (!noti)
-                    //    await ErrorHelper.SendSystemMess($"Не смогли отправить пользователю {inputUserId} ссылку на бота после оплаты");
                 }
 
                 return new SubResponse { code = 0 };

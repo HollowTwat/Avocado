@@ -96,7 +96,7 @@ namespace AvocadoService.Helpers
 
                 }
                 //if(string.IsNullOrEmpty(planLabel)) 
-                string url = $"https://nutri-ai.ru/?success_pay_email={Email}&plan_id={labelId}";
+                string url = $"https://myavocadobot.ru/?success_pay_email={Email}&plan_id={labelId}";
                 HttpClient httpClient = new HttpClient();
                 HttpResponseMessage response = await httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode(); // выбросит исключение, если ответ неудачен
