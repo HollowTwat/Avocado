@@ -81,7 +81,8 @@ namespace AvocadoService.Controllers
                     JObject root = JObject.Parse(Newtonsoft.Json.JsonConvert.SerializeObject(cl.Data.Values.First()));
 
                     // Безопасно достаем поле "label" с помощью SelectToken
-                    string planLabel = (string)root.SelectToken("CustomerReceipt.Items[0].label");
+                    //string planLabel = (string)root.SelectToken("CustomerReceipt.Items[0].label");
+                    string planLabel = cl.Description;
                     _logger.LogWarning($"Label={planLabel}");
                     await _context.Subscriptions.AddAsync(new Subscription
                     {

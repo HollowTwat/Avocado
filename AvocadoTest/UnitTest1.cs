@@ -43,6 +43,7 @@ namespace AvocadoTest
             _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
             _mockServiceScopeFactory.Setup(s => s.CreateScope()).Returns(_mockScope.Object);
         }
+
         [Fact]
         public async Task TableToHeadersTest()
         {
