@@ -251,6 +251,30 @@ namespace AvocadoTest
                 Xunit.Assert.True(res);
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
+        } 
+        //[Fact]
+        public async Task ParceNATINUELTest()
+        {
+            try
+            {
+                var source = "NATINUEL";
+                var path = @"C:\\ReposMy\natinuel.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        } 
+        [Fact]
+        public async Task ParceFOAMSTORETest()
+        {
+            try
+            {
+                var source = "FOAMSTORE";
+                var path = @"C:\\ReposMy\foamstore.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
         }
         private async Task<bool> ParceFileTest(string source, string path)
         {
