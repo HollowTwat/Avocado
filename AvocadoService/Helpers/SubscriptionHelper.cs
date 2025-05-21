@@ -31,8 +31,8 @@ namespace AvocadoService.Helpers
         public async Task<bool> CheckSub(long TgId)
         {
             var user = await _railwayContext.Users.SingleOrDefaultAsync(x => x.UserTgId == TgId);
-            return true;
-            //return user?.IsActive == true;
+            //return true;
+            return user?.IsActive == true;
         }
         public SuccessPayRequest ConvertToPayRequestJSON(string input)
         {
@@ -54,19 +54,7 @@ namespace AvocadoService.Helpers
             var json = ConvertRequestToJSON(input);
             return JsonConvert.DeserializeObject<RecurrentRequest>(json);
         }
-        public async Task<bool> SendPayNoti(long userTgId)
-        {
-            try
-            {
-                var noId = await GetUserNoId(userTgId);
-                //await SendSuccNot(noId, _succmess);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        
         public async Task<bool> SendEmailInfo(string Email, string planLabel)
         {
             try
