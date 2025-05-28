@@ -298,6 +298,9 @@ namespace AvocadoService.Controllers
             Email = Email.ToLower().Trim();
             try
             {
+                var oldSub = await _context.Subscriptions.FirstOrDefaultAsync(x => x.Email.ToLower().Contains(Email));
+                if (oldSub != null)
+                    return true;
                 CheckSecret(HttpContext.Request);
                 _context.Database.ExecuteSqlRaw("CALL \"public\".\"AddAccessToUserByEmail\"({0})", Email);
                 await ErrorHelper.SendSystemMess($"Добавлена подписка на Email: {Email}");
