@@ -77,7 +77,7 @@ namespace AvocadoService.Helpers
                     case "подписка на 1 год":
                         labelId = 12;
                         break;
-                    case "оплата тарифа золотой билет":
+                    case "золотой билет":
                         labelId = 13;
                         break;
                     default:
