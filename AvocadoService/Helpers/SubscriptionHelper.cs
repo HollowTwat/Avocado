@@ -68,13 +68,13 @@ namespace AvocadoService.Helpers
                 }
                 switch (planLabel.ToLower().Trim())
                 {
-                    case "оплата тарифа подписка навсегда":
+                    case "подписка навсегда":
                         labelId = 0;
                         break;
-                    case "оплата тарифа подписка на 3 месяца":
+                    case "подписка на 3 месяца":
                         labelId = 3;
                         break;
-                    case "оплата тарифа подписка на 1 год":
+                    case "подписка на 1 год":
                         labelId = 12;
                         break;
                     case "оплата тарифа золотой билет":

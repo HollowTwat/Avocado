@@ -1,13 +1,14 @@
 using AvocadoService.AvocadoServiceDb.DbModels;
-using AvocadoService.Helpers;
 using AvocadoService.AvocadoServiceParser;
+using AvocadoService.Helpers;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace AvocadoTest
@@ -51,7 +52,7 @@ namespace AvocadoTest
             {
                 var table = _railwayContext.Products.Select(x => new { Identifier = x.Id, FullName = x.Name })
     .ToList();
-                File.WriteAllText("output.json", JsonSerializer.Serialize(table));
+                File.WriteAllText("output.json", Newtonsoft.Json.JsonConvert.SerializeObject(table));
 
                 Xunit.Assert.True(true);
             }
@@ -198,7 +199,7 @@ namespace AvocadoTest
             try
             {
                 var source = "BIODEPO";
-                var path = @"C:\\ReposMy\biodepo.jsonl";
+                var path = @"C:\\ReposMy\biodepo_products_data_improved.json";
                 var res = await ParceFileTest(source, path);
                 Xunit.Assert.True(res);
             }
@@ -239,7 +240,7 @@ namespace AvocadoTest
                 Xunit.Assert.True(res);
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
-        }   
+        }
         //[Fact]
         public async Task ParceVIMTest()
         {
@@ -251,7 +252,7 @@ namespace AvocadoTest
                 Xunit.Assert.True(res);
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
-        } 
+        }
         //[Fact]
         public async Task ParceNATINUELTest()
         {
@@ -263,7 +264,7 @@ namespace AvocadoTest
                 Xunit.Assert.True(res);
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
-        } 
+        }
         //[Fact]
         public async Task ParceFOAMSTORETest()
         {
@@ -284,6 +285,55 @@ namespace AvocadoTest
                 var source = "BOX";
                 var path = @"C:\\ReposMy\exel.json";
                 var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+
+        //[Fact]
+        public async Task ParceSKINPROTest()
+        {
+            try
+            {
+                var source = "SKINPRO";
+                var path = @"C:\\ReposMy\skinpro_products.json";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceROCHERTest()
+        {
+            try
+            {
+                var source = "ROCHER";
+                var path = @"C:\\ReposMy\yves_rocher_products.json";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceYARKOSTTest()
+        {
+            try
+            {
+                var source = "YARKOST";
+                var path = @"C:\\ReposMy\yarkostorganic.jsonl";
+                var res = await ParceFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        [Fact]
+        public async Task ParceLETUTest()
+        {
+            try
+            {
+                var source = "LETU";
+                var path = @"C:\\ReposMy\letu_combined_data.json";
+                var res = await ParceBIGFileTest(source, path);
                 Xunit.Assert.True(res);
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
@@ -331,5 +381,131 @@ namespace AvocadoTest
             { return false; }
         }
 
+        private async Task<bool> ParceBIGFileTest(string source, string path)
+        {
+            try
+            {
+                var productList = new List<Product>();
+                var existingUrls = _railwayContext.Products
+                    .Select(x => x.Url)
+                    .Where(url => !string.IsNullOrWhiteSpace(url))
+                    .ToList();
+
+                // Потоковое чтение и десериализация JSON
+                using (var fileStream = File.OpenRead(path))
+                using (var streamReader = new StreamReader(fileStream))
+                using (var jsonReader = new JsonTextReader(streamReader))
+                {
+                    var serializer = new Newtonsoft.Json.JsonSerializer();
+
+                    // Читаем массив поэлементно
+                    while (await jsonReader.ReadAsync())
+                    {
+                        if (jsonReader.TokenType == JsonToken.StartObject)
+                        {
+                            var element = serializer.Deserialize<PythParserElement>(jsonReader);
+
+                            // Обработка элемента
+                            var wp = decimal.TryParse(element.Weight, out decimal dWeight);
+                            var vr = element?.Volume?.Trim()?.Replace(" ", "")?.Replace("мл", string.Empty)?.Replace("л", "000");
+                            var vp = decimal.TryParse(vr, out decimal dVolume);
+
+                            productList.Add(new Product
+                            {
+                                Brand = element.Brand,
+                                Brandinfo = element.Brandinfo,
+                                Consist = element.Consist,
+                                Country = element.Country,
+                                Description = element.Description,
+                                Howtouse = element.Howtouse,
+                                Name = element.Name,
+                                Price = element.Price,
+                                Source = source,
+                                Type = element.Type,
+                                Url = element.Url,
+                                Weight = wp ? dWeight : 0,
+                                Volume = vp ? dVolume : 0,
+                                Extra = JsonConvert.SerializeObject(element.Extra_attributes),
+                            });
+
+                            // Очищаем список каждые N элементов, чтобы не перегружать память
+                            if (productList.Count >= 2000)
+                            {
+                                await ProcessBatch(productList, existingUrls);
+                                productList.Clear();
+                            }
+                        }
+                    }
+                }
+
+                // Обработка оставшихся элементов
+                if (productList.Count > 0)
+                {
+                    await ProcessBatch(productList, existingUrls);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Логируем ошибку для отладки
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Метод для обработки пакета записей и сохранения в БД
+        private async Task ProcessBatch(List<Product> products, List<string> existingUrls)
+        {
+            var newProducts = products
+                .Where(p => !existingUrls.Contains(p.Url))
+                .ToList();
+
+            if (newProducts.Any())
+            {
+                await _railwayContext.Products.AddRangeAsync(newProducts);
+                await _railwayContext.SaveChangesAsync();
+            }
+        }
+        //[Fact]
+        public void ShouldReturnBrandNamesFromJson()
+        {
+            // Путь к JSON файлу
+            var jsonFilePath = @"C:\\ReposMy\aaa.json";
+            var jsonFilePath2 = @"C:\\ReposMy\aaa2.json";
+            // Чтение и парсинг JSON файла
+            var jsonData = File.ReadAllText(jsonFilePath);
+            var brands = JsonConvert.DeserializeObject<List<BrandData>>(jsonData);
+            var jsonData2 = File.ReadAllText(jsonFilePath2);
+            var brands2 = JsonConvert.DeserializeObject<List<BrandData>>(jsonData2);
+            // Извлечение значений поля navigationState без "/brand/"
+            var brandNames = brands
+                .SelectMany(brand => brand.Items)
+                .Select(item => item.NavigationState.Split(new[] { "/brand/" }, StringSplitOptions.None).LastOrDefault())
+                .Where(name => !string.IsNullOrEmpty(name))
+                .ToArray();
+            var brandNames2 = brands2
+               .SelectMany(brand2 => brand2.Items)
+               .Select(item2 => item2.NavigationState.Split(new[] { "/brand/" }, StringSplitOptions.None).LastOrDefault())
+               .Where(name2 => !string.IsNullOrEmpty(name2))
+               .ToArray();
+            var brandNamesRes = brandNames2.Except(brandNames).ToList();
+
+            var rrr = Newtonsoft.Json.JsonConvert.SerializeObject(brandNamesRes);
+            // Ожидаемая далее проверка (используется для наглядности, может быть заменена тестированием фактов)
+            string[] expected = { "aa", "aaadesign" };
+
+        }
+        private class BrandData
+        {
+            [JsonProperty("items")]
+            public List<Item> Items { get; set; }
+        }
+
+        private class Item
+        {
+            [JsonProperty("navigationState")]
+            public string NavigationState { get; set; }
+        }
     }
 }
