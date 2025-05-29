@@ -230,22 +230,23 @@ namespace AvocadoService.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> IsActiveUser(long userTgId)
+        public async Task<int> IsActiveUser(long userTgId)
         {
             try
             {
                 var user = await _context.Users.SingleOrDefaultAsync(x => x.UserTgId == userTgId);
                 if (user == null)
-                    return false;
-                if (user.IsActive) return true;
-                else return false;
+                    return 0;
+                if (user.IsActive) return 2;
+                else return 1;
             }
             catch (Exception ex)
             {
                 await ErrorHelper.SendErrorMess($"Ошибка проверки пользователя {userTgId}", ex);
-                return false;
+                return 3;
             }
         }
+
         [HttpPost]
         public async Task<bool> ActivateUser(long userTgId, string userEmail)
         {
