@@ -259,7 +259,7 @@ namespace AvocadoService.Controllers
                 user.Email = userEmail;
                 if (user.IsActive)
                     return true;
-                var readySub = await _context.Subscriptions.LastOrDefaultAsync(x => x.IsLinked == false && x.IsActive == true && userEmail == x.Email.ToLower().Trim());
+                var readySub = await _context.Subscriptions.OrderBy(x=>x.Id).LastOrDefaultAsync(x => x.IsLinked == false && x.IsActive == true && userEmail == x.Email.ToLower().Trim());
                 if (readySub == null)
                     return false;
 
