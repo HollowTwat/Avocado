@@ -9,7 +9,7 @@ namespace AvocadoService.Helpers
     {
 
         private const long _errorChanelId = -1002372667152;
-        private static string _token = "7851699875:AAEXRV1E-s1fd2j2DdPahQkooEF0ipbC-8k";
+        private static string _token = "7557028885:AAHmFRXd5C2gtJafVg0XVYQjA_VNkbIB5k8";
         private static TelegramBotClient client { get; set; }
         public static TelegramBotClient GetTelegramBot()
         {
