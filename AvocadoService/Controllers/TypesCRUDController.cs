@@ -1,10 +1,12 @@
 ﻿using AngleSharp.Common;
 using AvocadoService.AvocadoServiceDb.DbModels;
 using AvocadoService.AvocadoServiceParser;
+using AvocadoService.Helpers;
 using AvocadoService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NutriDbService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +22,12 @@ namespace AvocadoService.Controllers
         private readonly ILogger<TypesCRUDController> _logger;
         private railwayContext _context;
 
-        public TypesCRUDController(railwayContext context, ILogger<TypesCRUDController> logger)
+        private readonly NotificationHelper _notificationHelper;
+        public TypesCRUDController(railwayContext context, NotificationHelper notificationHelper, ILogger<TypesCRUDController> logger)
         {
             _context = context;
             _logger = logger;
+            _notificationHelper = notificationHelper;
         }
 
         [HttpGet]
@@ -267,6 +271,17 @@ namespace AvocadoService.Controllers
         public async Task<AvocadoServiceDb.DbModels.User> GetUserData(long userTgId)
         {
             return await _context.Users.SingleOrDefaultAsync(x => x.UserTgId == userTgId);
+        }
+
+        [HttpGet]
+        public async Task<bool> SendManualVoteNotify(long userTgId)
+        {
+            try
+            {
+                await _notificationHelper.SendVoteNotificationSingle(userTgId);
+                return true;
+            }
+            catch (Exception ex) { return false; }
         }
 
         [HttpGet]

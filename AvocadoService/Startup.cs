@@ -33,7 +33,7 @@ namespace AvocadoService
             services.AddSwaggerGen();
             services.AddDbContext<railwayContext>();
             services.AddTransient<SubscriptionHelper>();
-            services.AddTransient<RIVEParserHelper>();
+            services.AddTransient<NotificationHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

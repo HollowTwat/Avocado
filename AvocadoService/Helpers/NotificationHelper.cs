@@ -1,11 +1,16 @@
-﻿using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
-using System;
-using System.Threading.Tasks;
+﻿using AvocadoService.AvocadoServiceDb.DbModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using AvocadoService.AvocadoServiceDb.DbModels;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NutriDbService;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace AvocadoService.Helpers
 {
@@ -13,6 +18,7 @@ namespace AvocadoService.Helpers
     {
 
         private readonly static string _api_key = "f3ccf95cf601c3fb7efe18c3b6135d4a";
+        private string Htoken = "7557028885:AAHmFRXd5C2gtJafVg0XVYQjA_VNkbIB5k8";
         private readonly static string _reqUrl = $"https://chatter.salebot.pro/api/{_api_key}/message";
         private readonly static string _lessondonemess = "36169317";
         private readonly static string _lessonforgotmess = "36327038";
@@ -34,48 +40,35 @@ namespace AvocadoService.Helpers
             var response = await client.PostAsync(_reqUrl, content);
             var r = await response.Content.ReadAsStringAsync();
         }
-        //public async Task SendNotification(int UserId, bool isMornong)
-        //{
-        //    try
-        //    {
-        //        _logger.LogWarning($"User:{UserId} SendNotification");
-        //        bool isMealNotSend = false;
-        //        bool isLessonForgotSend = false;
-        //        bool isLessonDoneSend = false;
-        //        var user = await _context.Users.SingleAsync(x => x.Id == UserId);
-        //        var userInfo = await _context.Userinfos.SingleAsync(x => x.UserId == UserId);
-        //        if (!userInfo.Donelessonlist.Contains("21"))
-        //        {
-        //            if (userInfo.LastlessonTime < DateTime.UtcNow.ToLocalTime().AddHours(3).AddDays(-1))
-        //                isLessonForgotSend = true;
-        //            else
-        //                isLessonDoneSend = true;
-        //        }
-        //        if (isMornong)
-        //        {
-        //            if (isLessonForgotSend)
-        //                await SendNot(user.UserNoId, _lessonforgotmess);
-        //            if (isLessonDoneSend)
-        //                await SendNot(user.UserNoId, _lessondonemess);
-        //        }
-        //        else
-        //        {
-        //            var meals = await _context.Meals.Where(x => x.UserId == UserId).OrderByDescending(x => x.MealTime).FirstOrDefaultAsync();
+        public async Task SendVoteNotificationSingle(long UserTgId)
+        {
+            try
+            {
+                _logger.LogWarning($"User:{UserTgId} SendNotification");
 
-        //            var lastMealTime = meals?.MealTime;
-        //            if (lastMealTime != null && lastMealTime < DateTime.UtcNow.ToLocalTime().AddHours(3).AddDays(-1))
-        //                isMealNotSend = true;
-        //            if (isMealNotSend && isLessonForgotSend)
-        //                await SendNot(user.UserNoId, _ndiarynmealmess);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"NotificationSendError for User:{UserId}", ex);
-        //        await ErrorHelper.SendErrorMess($"NotificationSendError for User:{UserId}", ex);
-        //    }
+                var botClient = new TelegramBotClient(Htoken);
+                var mess = $"🌿 <i>Богини, как вы оцените свое последнее взаимодействие с Avocado Ботом?</i>\r\n\r\nОцените от 1 до 10, где 1 —  «очень плохо», а 10 — «отлично».";
+                var buttons = new List<InlineKeyboardButton>();
+                for (int i = 1; i <= 10; i++)
+                {
+                    buttons.Add(InlineKeyboardButton.WithCallbackData($"{i}", $"vote_{i}"));
+                }
+                List<InlineKeyboardButton> firstHalf = buttons.GetRange(0, 5);  
+                List<InlineKeyboardButton> secondHalf = buttons.GetRange(5, 5); 
+                await botClient.SendTextMessageAsync(
+                    chatId: UserTgId,
+                    text: mess,
+                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Html,
+                    replyMarkup: new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>> { firstHalf, secondHalf })
+                ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"NotificationSendError for User:{UserTgId}", ex);
+                await ErrorHelper.SendErrorMess($"NotificationSendError for User:{UserTgId}", ex);
+            }
 
-        //}
+        }
     }
 
     public class NocodeNot
