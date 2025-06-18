@@ -58,6 +58,79 @@ namespace AvocadoTest
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
         }
+        [Fact]
+        public async Task DuplicateURLDell()
+        {
+            try
+            {
+                var duplicates = await _railwayContext.Products
+      .GroupBy(p => p.Url)
+      .Where(g => g.Count() > 1)
+      .Select(g => new
+      {
+          Url = g.Key,
+          MaxId = g.Max(x => x.Id),
+          AllIds = g.Select(x => x.Id).ToList()
+      })
+      .ToListAsync();
+
+                int i = 0;
+                // Удаляем все дубликаты, кроме записи с минимальным ID
+                foreach (var group in duplicates)
+                {
+                    var idsToDelete = group.AllIds.Where(id => id != group.MaxId).ToList();
+                    var productsToDelete = await _railwayContext.Products
+                        .Where(p => idsToDelete.Contains(p.Id))
+                        .ToListAsync();
+
+                    _railwayContext.Products.RemoveRange(productsToDelete);
+                    i++;
+                    if (i > 2000)
+                    {
+                        await _railwayContext.SaveChangesAsync();
+                        i = 0;
+                    }
+                }
+
+
+                Xunit.Assert.True(true);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task DuplicateNameDell()
+        {
+            try
+            {
+                var duplicates = await _railwayContext.Products/*.Where(x => x.Source == "GOLD")*/
+      .GroupBy(p => p.Name)
+      .Where(g => g.Count() > 1)
+      .Select(g => new
+      {
+          Name = g.Key,
+          MaxId = g.Max(x => x.Id),
+          AllIds = g.Select(x => x.Id).ToList(),
+          //URL = g.Select(x => x.Url).ToList(),
+          //Consist=g.Select(x=>x.Consist),
+      })
+      .ToListAsync();
+
+                // Удаляем все дубликаты, кроме записи с минимальным ID
+                foreach (var group in duplicates)
+                {
+                    var idsToDelete = group.AllIds.Where(id => id != group.MaxId).ToList();
+                    var productsToDelete = await _railwayContext.Products
+                        .Where(p => idsToDelete.Contains(p.Id))
+                        .ToListAsync();
+
+                    _railwayContext.Products.RemoveRange(productsToDelete);
+                }
+
+                await _railwayContext.SaveChangesAsync();
+                Xunit.Assert.True(true);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
         //[Fact]
         public async Task ParceNANOORGTest()
         {
@@ -326,13 +399,73 @@ namespace AvocadoTest
             }
             catch (Exception ex) { Xunit.Assert.Fail(); }
         }
-        [Fact]
+        //[Fact]
         public async Task ParceLETUTest()
         {
             try
             {
                 var source = "LETU";
                 var path = @"C:\\ReposMy\letu_combined_data.json";
+                var res = await ParceBIGFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceLETU2Test()
+        {
+            try
+            {
+                var source = "LETU";
+                var path = @"C:\\ReposMy\letu_combined_data_2.json";
+                var res = await ParceBIGFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceLETU3Test()
+        {
+            try
+            {
+                var source = "LETU";
+                var path = @"C:\\ReposMy\letu_combined_data_3.json";
+                var res = await ParceBIGFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceLETU4Test()
+        {
+            try
+            {
+                var source = "LETU";
+                var path = @"C:\\ReposMy\letu_combined_data_4.json";
+                var res = await ParceBIGFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceLETU5Test()
+        {
+            try
+            {
+                var source = "LETU";
+                var path = @"C:\\ReposMy\letu_combined_data_5.json";
+                var res = await ParceBIGFileTest(source, path);
+                Xunit.Assert.True(res);
+            }
+            catch (Exception ex) { Xunit.Assert.Fail(); }
+        }
+        //[Fact]
+        public async Task ParceLETU6Test()
+        {
+            try
+            {
+                var source = "LETU";
+                var path = @"C:\\ReposMy\letu_combined_data_6.json";
                 var res = await ParceBIGFileTest(source, path);
                 Xunit.Assert.True(res);
             }
@@ -457,6 +590,10 @@ namespace AvocadoTest
         // Метод для обработки пакета записей и сохранения в БД
         private async Task ProcessBatch(List<Product> products, List<string> existingUrls)
         {
+            //existingUrls = _railwayContext.Products.AsNoTracking()
+            //       .Select(x => x.Url)
+            //       .Where(url => !string.IsNullOrWhiteSpace(url))
+            //       .ToList();
             var newProducts = products
                 .Where(p => !existingUrls.Contains(p.Url))
                 .ToList();

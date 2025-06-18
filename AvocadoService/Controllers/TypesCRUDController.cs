@@ -3,6 +3,7 @@ using AvocadoService.AvocadoServiceDb.DbModels;
 using AvocadoService.AvocadoServiceParser;
 using AvocadoService.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace AvocadoService.Controllers
                      .ToList();
                 var d2 = dub.DistinctBy(x => x.Url).ToList();
                 _context.Products.RemoveRange(d2);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -61,7 +62,7 @@ namespace AvocadoService.Controllers
         {
             try
             {
-                var elem = _context.Products.SingleOrDefault(x => x.Id == Id);
+                var elem = await _context.Products.SingleOrDefaultAsync(x => x.Id == Id);
                 return Newtonsoft.Json.JsonConvert.SerializeObject(elem);
 
             }
@@ -98,7 +99,7 @@ namespace AvocadoService.Controllers
                 if (users.Any())
                 {
 
-                    var user = users.Single();
+                    var user = await users.SingleAsync();
                     user.Lifestyle = req.user_data.lifestyle;
                     user.Allergy = req.user_data.allergy;
                     user.Age = age;
@@ -112,7 +113,7 @@ namespace AvocadoService.Controllers
                 }
                 else
                 {
-                    _context.Users.Add(new AvocadoServiceDb.DbModels.User
+                    await _context.Users.AddAsync(new AvocadoServiceDb.DbModels.User
                     {
                         UserTgId = user_tg_id,
                         Stress = req.user_data.stress,
@@ -127,12 +128,13 @@ namespace AvocadoService.Controllers
 
                     });
                 }
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex) { return false; }
 
         }
+
         [HttpPost]
         public async Task<bool> SetUserHairData(SetUserHairDataRequest req)
         {
@@ -144,7 +146,7 @@ namespace AvocadoService.Controllers
                 if (users.Any())
                 {
 
-                    var user = users.Single();
+                    var user = await users.SingleAsync();
                     user.Hairscalptype = req.user_hair_data.hair_scalp_type;
                     user.Hairthickness = req.user_hair_data.hair_thickness;
                     user.Hairlength = req.user_hair_data.hair_length;
@@ -160,7 +162,7 @@ namespace AvocadoService.Controllers
                 }
                 else
                 {
-                    _context.Users.Add(new AvocadoServiceDb.DbModels.User
+                    await _context.Users.AddAsync(new AvocadoServiceDb.DbModels.User
                     {
                         UserTgId = user_tg_id,
                         Hairscalptype = req.user_hair_data.hair_scalp_type,
@@ -176,7 +178,7 @@ namespace AvocadoService.Controllers
 
                     });
                 }
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex) { return false; }
@@ -194,7 +196,7 @@ namespace AvocadoService.Controllers
                 if (users.Any())
                 {
 
-                    var user = users.Single();
+                    var user = await users.SingleAsync();
                     user.Bodyskintype = req.user_body_data.body_skin_type;
                     user.Bodyskinsensitivity = req.user_body_data.body_skin_sensitivity;
                     user.Bodyskincondition = req.user_body_data.body_skin_condition;
@@ -205,7 +207,7 @@ namespace AvocadoService.Controllers
                 }
                 else
                 {
-                    _context.Users.Add(new AvocadoServiceDb.DbModels.User
+                    await _context.Users.AddAsync(new AvocadoServiceDb.DbModels.User
                     {
                         UserTgId = user_tg_id,
                         Bodyskintype = req.user_body_data.body_skin_type,
@@ -216,7 +218,7 @@ namespace AvocadoService.Controllers
 
                     });
                 }
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex) { return false; }
@@ -234,7 +236,7 @@ namespace AvocadoService.Controllers
                 if (users.Any())
                 {
 
-                    var user = users.Single();
+                    var user = await users.SingleAsync();
                     user.Faceskintype = req.user_face_data.face_skin_type;
                     user.Faceskincondition = req.user_face_data.face_skin_condition;
                     user.Faceskinissues = req.user_face_data.face_skin_issues;
@@ -244,7 +246,7 @@ namespace AvocadoService.Controllers
                 }
                 else
                 {
-                    _context.Users.Add(new AvocadoServiceDb.DbModels.User
+                    await _context.Users.AddAsync(new AvocadoServiceDb.DbModels.User
                     {
                         UserTgId = user_tg_id,
                         Faceskintype = req.user_face_data.face_skin_type,
@@ -254,7 +256,7 @@ namespace AvocadoService.Controllers
 
                     });
                 }
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex) { return false; }
@@ -264,9 +266,24 @@ namespace AvocadoService.Controllers
         [HttpGet]
         public async Task<AvocadoServiceDb.DbModels.User> GetUserData(long userTgId)
         {
-            return _context.Users.SingleOrDefault(x => x.UserTgId == userTgId);
+            return await _context.Users.SingleOrDefaultAsync(x => x.UserTgId == userTgId);
         }
 
+        [HttpGet]
+        public async Task<bool> SetUserVote(long userTgId, short vote)
+        {
+            try
+            {
+                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserTgId == userTgId);
+                if (user == null)
+                    return false;
+                user.Vote = vote;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync(true);
+                return true;
+            }
+            catch (Exception ex) { return false; }
+        }
         //[HttpGet]
         //public async Task<bool> CheckUserSub(long userTgId)
         //{

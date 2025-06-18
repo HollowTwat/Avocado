@@ -256,6 +256,10 @@ namespace AvocadoService.AvocadoServiceDb.DbModels
 
                 entity.Property(e => e.UserTgId).HasColumnName("userTgId");
 
+                entity.Property(e => e.Vote)
+                    .HasColumnName("vote")
+                    .HasDefaultValueSql("11");
+
                 entity.Property(e => e.WaterIntake)
                     .HasMaxLength(255)
                     .HasColumnName("water_intake");
