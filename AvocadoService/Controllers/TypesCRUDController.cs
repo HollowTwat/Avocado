@@ -276,6 +276,7 @@ namespace AvocadoService.Controllers
         [HttpGet]
         public async Task<bool> StartVoteNotify()
         {
+            var usersTgIds = await _context.Users.Where(x => x.IsActive == true).Select(x => x.UserTgId).ToListAsync();
 
             _ = Task.Run(async () =>
             {
@@ -283,9 +284,7 @@ namespace AvocadoService.Controllers
                 try
                 {
                     await _notificationHelper.SendAlertToMe("Start Vote");
-                    var usersTgIds = await _context.Users.Where(x => x.IsActive == true).Select(x => x.UserTgId).ToListAsync();
-
-                    foreach (var userTgId in usersTgIds)
+                       foreach (var userTgId in usersTgIds)
                     {
                         try
                         {
@@ -302,7 +301,7 @@ namespace AvocadoService.Controllers
                 catch (Exception ex)
                 {
                     await _notificationHelper.SendAlertToMe("Exception on Vote");
-                    _logger.LogError($"Exception on Vote:", ex);
+                    _logger.LogError(ex,$"Exception on Vote:");
                     _logger.LogInformation($"DoneList={Newtonsoft.Json.JsonConvert.SerializeObject(doneids)}");
                     await _notificationHelper.SendAlertToMe("Exception on Vote:");
                 }
