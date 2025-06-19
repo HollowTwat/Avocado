@@ -284,7 +284,7 @@ namespace AvocadoService.Controllers
                 try
                 {
                     await _notificationHelper.SendAlertToMe("Start Vote");
-                       foreach (var userTgId in usersTgIds)
+                    foreach (var userTgId in usersTgIds)
                     {
                         try
                         {
@@ -296,12 +296,12 @@ namespace AvocadoService.Controllers
                             await _notificationHelper.SendAlertToMe($"Exception on Vote id= {userTgId}");
                         }
                     }
-                    await _notificationHelper.SendAlertToMe("End Vote");
+                    await _notificationHelper.SendAlertToMe($"End Vote. Total={doneids.Count}");
                 }
                 catch (Exception ex)
                 {
                     await _notificationHelper.SendAlertToMe("Exception on Vote");
-                    _logger.LogError(ex,$"Exception on Vote:");
+                    _logger.LogError(ex, $"Exception on Vote:");
                     _logger.LogInformation($"DoneList={Newtonsoft.Json.JsonConvert.SerializeObject(doneids)}");
                     await _notificationHelper.SendAlertToMe("Exception on Vote:");
                 }
